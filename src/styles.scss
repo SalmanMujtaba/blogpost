@@ -15,6 +15,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
+  text-align: center;
 }
 
 button {
@@ -46,6 +47,7 @@ input[type="text"], textarea {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 textarea {
@@ -110,3 +112,24 @@ label {
 .edit-button:hover {
   background-color: #e0a800;
 }
+
+.cancel-button {
+  background-color: #6c757d;  /* Gray background for cancel button */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.cancel-button:hover {
+  background-color: #5a6268;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-start;
+}
+

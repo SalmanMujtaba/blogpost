@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { CoreService } from 'src/app/services/core.service';
+import { IBlog } from 'src/app/models/blog.interface';
 
 @Component({
   selector: 'app-blog-form',
@@ -28,13 +29,25 @@ export class BlogFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Check if we're in edit mode by looking for a blog ID in the route
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.isEditMode = true;
-        this.blogId = +id;
-        this.blogService.getBlogById(this.blogId).subscribe(blog => {
-          this.blogForm.patchValue(blog);
+        this.blogId = +id; // Convert string to number
+        this.loadBlogForEdit(this.blogId); // Load blog for editing
+      }
+    });
+  }
+
+  loadBlogForEdit(id: number): void {
+    // Fetch the blog by ID and populate the form
+    this.blogService.getBlogById(id).subscribe((blog: IBlog | undefined) => {
+      if (blog) {
+        this.blogForm.patchValue({
+          title: blog.title,
+          content: blog.content,
+          author: blog.author
         });
       }
     });
@@ -42,15 +55,21 @@ export class BlogFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.blogForm.valid) {
-      if (this.isEditMode) {
-        this.blogService.updateBlog(this.blogId!, this.blogForm.value).subscribe(() => {
+      const blog: IBlog = this.blogForm.value;
+
+      if (this.isEditMode && this.blogId) {
+        this.blogService.updateBlog(this.blogId, blog).subscribe(() => {
           this.router.navigate(['/blogs']);
         });
       } else {
-        this.blogService.createBlog(this.blogForm.value).subscribe(() => {
+        this.blogService.createBlog(blog).subscribe(() => {
           this.router.navigate(['/blogs']);
         });
       }
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/blogs']);  // Navigate back to the blog list page
   }
 }

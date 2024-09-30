@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 
 import { IBlog } from '../models/blog.interface';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +18,6 @@ export class CoreService {
     return this.http.get<IBlog[]>(this.apiUrl);
   }
 
-  // Fetch a single blog by ID
-  getBlogById(id: number): Observable<IBlog> {
-    return this.http.get<IBlog>(`${this.apiUrl}?id=${id}`);
-  }
-
   // Create a new blog post
   createBlog(blog: IBlog): Observable<IBlog> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -35,5 +30,12 @@ export class CoreService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     blog.timestamp = new Date().toISOString();  // Update timestamp when editing
     return this.http.put<IBlog>(`${this.apiUrl}/${id}`, blog, { headers });
+  }
+
+  // Fetch a single blog by ID
+  getBlogById(id: number): Observable<IBlog | undefined> {
+    return this.getBlogs().pipe(
+      map((blogs: IBlog[]) => blogs.find((blog: IBlog) => blog.id === id))
+    );
   }
 }
