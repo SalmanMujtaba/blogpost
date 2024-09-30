@@ -1,0 +1,13 @@
+<div class="container">
+  <h2>All Blog Posts</h2>
+
+  <button routerLink="/create-blog" class="create-new-button">Create New Blog Post</button>
+
+  <div *ngFor="let blog of blogs" class="blog-card">
+    <h2>{{ blog.title }}</h2>
+    <p>{{ blog.content }}</p>
+    <p class="author"><strong>Author:</strong> {{ blog.author }}</p>
+    <p class="timestamp"><strong>Published:</strong> {{ blog.timestamp | date:'short' }}</p>
+    <button class="edit-button" (click)="editBlog(blog.id)">Edit</button>
+  </div>
+</div>
